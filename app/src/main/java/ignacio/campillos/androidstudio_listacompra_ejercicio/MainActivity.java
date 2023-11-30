@@ -1,10 +1,12 @@
 package ignacio.campillos.androidstudio_listacompra_ejercicio;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -23,6 +25,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import ignacio.campillos.androidstudio_listacompra_ejercicio.adapaters.ProductsAdapter;
+import ignacio.campillos.androidstudio_listacompra_ejercicio.configuracion.Constantes;
 import ignacio.campillos.androidstudio_listacompra_ejercicio.databinding.ActivityMainBinding;
 import ignacio.campillos.androidstudio_listacompra_ejercicio.modelos.Product;
 
@@ -33,13 +36,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ProductsAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
 
         productList = new ArrayList<>();
 
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog createProduct(){
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-        builder.setTitle("CREATE PRODUCT");
+        builder.setTitle(R.string.createProduct);
         builder.setCancelable(false);
 
         View productViewModel = LayoutInflater.from(this).inflate(R.layout.product_view_model,null);
@@ -106,12 +111,12 @@ public class MainActivity extends AppCompatActivity {
         txtPrice.addTextChangedListener(textWatcher);
 
 
-        builder.setNegativeButton("CANCEL",null);
-        builder.setPositiveButton("CREATE", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.buttonCancel,null);
+        builder.setPositiveButton(R.string.buttonUpdate, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (txtName.getText().toString().isEmpty() || txtPrice.getText().toString().isEmpty() || txtQuantity.getText().toString().isEmpty()){
-                    Toast.makeText(MainActivity.this, "MISSING DATA", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.missingData, Toast.LENGTH_SHORT).show();
                 }else {
                     Product product = new Product (
                             txtName.getText().toString(),
@@ -126,5 +131,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return builder.create();
+    }
+
+    //A LA HORA DE INCLINAR EL MOVIL SE GUARDA LA INFORMACION (Lista) EN UN BUNDLE
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("LIST", productList);
+
+    }
+
+    //AL VOLVER SE CARGA LA INFORMACION DE DICHO BUNDLE EN LA LISTA y SE ACTUALIZA EL ADAPTER CON TODA LA LISTA (Desde index 0 al tamaño de la lista)
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        productList.addAll((ArrayList<Product>)savedInstanceState.getSerializable("LIST"));
+        adapter.notifyItemRangeInserted(0,productList.size());
     }
 }

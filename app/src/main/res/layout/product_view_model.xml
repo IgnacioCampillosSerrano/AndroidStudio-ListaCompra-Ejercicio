@@ -19,7 +19,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:ems="10"
-            android:hint="Product Name"
+            android:hint="@string/name"
             android:inputType="text"
             android:padding="10dp" />
 
@@ -37,6 +37,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="@string/quantity"
                 android:inputType="number"
                 android:padding="10dp" />
 
@@ -48,6 +49,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="@string/name"
                 android:inputType="numberDecimal"
                 android:padding="10dp" />
 
@@ -62,7 +64,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:gravity="end"
-            android:hint="Total Price"
+            android:hint="@string/total"
             android:padding="10dp" />
 
     </LinearLayout>
